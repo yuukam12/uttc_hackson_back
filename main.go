@@ -50,7 +50,7 @@ func init() {
 	}
 
 	mysqlUser := os.Getenv("MYSQL_USER")
-	mysqlUserPwd := os.Getenv("MYSQL_ROOT_PASSWORD")
+	mysqlUserPwd := os.Getenv("MYSQL_PASSWORD")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
 
 	// ①-2: MySQL接続情報を使用してDBに接続
@@ -74,7 +74,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		category := r.URL.Query().Get("category")
 
 		if category == "" {
-			log.Println("fail: name is empty")
+			log.Println("fail: Category is empty")
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
@@ -88,7 +88,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		contents := make([]ContentResForHTTPGet, 0)
 		for rows.Next() {
 			var content ContentResForHTTPGet
-			if err := rows.Scan(&content.Id, &content.Title, &content.Description, &content.Url, &content.Image, &content.Uploaded_by, &content.Category, &content.Media); err != nil {
+			if err := rows.Scan(&content.Id, &content.Title, &content.Description, &content.Url, &content.Image, &content.UploadedBy, &content.Category, &content.Media); err != nil {
 				log.Printf("fail: rows.Scan, %v\n", err)
 				if err := rows.Close(); err != nil {
 					log.Printf("fail: rows.Close(), %v\n", err)
@@ -123,7 +123,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if req.Title == "" {
-			log.Println("fail: Name is empty")
+			log.Println("fail: Title is empty")
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
@@ -213,9 +213,8 @@ func main() {
 	http.HandleFunc("/content", handler)
 	closeDBWithSysCall()
 
-	// 8000番ポートでリクエストを待ち受ける
 	log.Println("Listening...")
-	if err := http.ListenAndServe(":8000", nil); err != nil {
+	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
 }
