@@ -72,13 +72,25 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		// GETリクエストの処理
 		category := r.URL.Query().Get("category")
+		keyword := r.URL.Query().Get("keyword")
 
 		if category == "" {
 			log.Println("fail: Category is empty")
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		rows, err := db.Query("SELECT id, title, description, url, image, uploaded_by, category, media FROM content WHERE category = ?", category)
+		query := "SELECT id, title, description, url, image, uploaded_by, category, media FROM content WHERE category = ?"
+		if keyword != "" {
+			query += " AND (title LIKE ? OR description LIKE ?)"
+		}
+
+		var rows *sql.Rows
+		var err error
+		if keyword != "" {
+			rows, err = db.Query(query, category, "%"+keyword+"%", "%"+keyword+"%")
+		} else {
+			rows, err = db.Query(query, category)
+		}
 		if err != nil {
 			log.Printf("fail: db.Query, %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
