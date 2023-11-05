@@ -12,5 +12,3 @@ $CMD_MYSQL -e "create table content (
     category varchar(50)
     media varchar(50)
     );"
-
-$CMD_MYSQL -e  "insert into content values (1, '記事1', '記事1です。');"
