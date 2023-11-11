@@ -2,14 +2,14 @@ version: "3.8"
 
 services:
   db:
-    container_name: hackson_db  # 変更された行
+    container_name: hackathon_db  # 変更された行
     build:
       context: .
       dockerfile: Dockerfile
     platform: linux/x86_64
     tty: true
     ports:
-      - 8080:8080
+      - 3306:3306
     env_file:
       - ./.env_mysql
     volumes:
@@ -22,4 +22,4 @@ services:
 
 volumes:
   mysql-data:
-    name: mysql-volume2
+    name: mysql-volume3

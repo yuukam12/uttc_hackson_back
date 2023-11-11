@@ -18,25 +18,25 @@ import (
 )
 
 type ContentResForHTTPGet struct {
-	Id   string `json:"id"`
-	Title string `json:"title"`
-	Description  string  `json:"description"`
-	Url string  `json:"url"`
-	Image []byte  `json:"image"`
-	UploadedBy string  `json:"uploaded_by"`
-	CreateDate time.Time `json:"create_date"`
-	Category string `json:"category"`
-	Media string `json:"media"`
+	Id          string    `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Url         string    `json:"url"`
+	Image       []byte    `json:"image"`
+	UploadedBy  string    `json:"uploaded_by"`
+	CreateDate  time.Time `json:"create_date"`
+	Category    string    `json:"category"`
+	Media       string    `json:"media"`
 }
 
 type ContentReqForHTTPPost struct {
-	Title string `json:"title"`
-	Description  string `json:"description,omitempty"`
-	Url string  `json:"url"`
-	Image []byte  `json:"image,omitempty"`
-	UploadedBy string `json:"uploaded_by"`
-	Category string `json:"category"`
-	Media string `json:"media"`
+	Title       string `json:"title"`
+	Description string `json:"description,omitempty"`
+	Url         string `json:"url"`
+	Image       []byte `json:"image,omitempty"`
+	UploadedBy  string `json:"uploaded_by"`
+	Category    string `json:"category"`
+	Media       string `json:"media"`
 }
 
 // ① GoプログラムからMySQLへ接続
@@ -48,16 +48,14 @@ func init() {
 	if err := godotenv.Load(envFilePath); err != nil {
 		log.Fatalf("fail: godotenv.Load, %v\n", err)
 	}
-
 	mysqlUser := os.Getenv("MYSQL_USER")
-	mysqlUserPwd := os.Getenv("MYSQL_PASSWORD")
+	mysqlPwd := os.Getenv("MYSQL_PWD")
+	mysqlHost := os.Getenv("MYSQL_HOST")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
 
-	// ①-2: MySQL接続情報を使用してDBに接続
-	_db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@(localhost:3306)/%s", mysqlUser, mysqlUserPwd, mysqlDatabase))
-	if err != nil {
-		log.Fatalf("fail: sql.Open, %v\n", err)
-	}
+	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
+	_db, nil := sql.Open("mysql", connStr)
+
 	// ①-3: データベースへのPingを確認
 	if err := _db.Ping(); err != nil {
 		log.Fatalf("fail: _db.Ping, %v\n", err)
@@ -121,7 +119,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		w.Write(bytes)
 		return
 
-
 	case http.MethodPost:
 		// POSTリクエストの処理
 		var req ContentReqForHTTPPost
@@ -141,7 +138,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//
-		if req.Category =="" {
+		if req.Category == "" {
 			log.Println("fail: Category is empty")
 			w.WriteHeader(http.StatusBadRequest)
 			return
@@ -186,7 +183,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		CreateDate := time.Now()
 
-
 		// データベースに新しいユーザー情報を挿入
 		_, err = tx.Exec("INSERT INTO content (id, title, description, url, image, uploaded_by, create_date, category, media) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", IdStr, req.Title, req.Description, req.Url, req.Image, req.UploadedBy, CreateDate, req.Category, req.Media)
 		if err != nil {
@@ -226,7 +222,7 @@ func main() {
 	closeDBWithSysCall()
 
 	log.Println("Listening")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":3306", nil); err != nil {
 		log.Fatal(err)
 	}
 }

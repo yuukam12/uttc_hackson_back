@@ -15,7 +15,7 @@ RUN go mod download
 RUN go build -o db
 
 # ポートを公開 (必要に応じて)
-EXPOSE 8080
+EXPOSE 3306
 
 # コンテナが起動したときに実行するコマンドを指定
 CMD ["./your-app-name"]
