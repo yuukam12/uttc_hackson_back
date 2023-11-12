@@ -7,7 +7,7 @@ WORKDIR /app
 # ホストのGoプログラムファイルをコンテナにコピー
 COPY main.go .
 COPY go.mod .
-# COPY go.sum .
+COPY go.sum .
 
 RUN go mod download
 
