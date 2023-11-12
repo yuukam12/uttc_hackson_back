@@ -88,7 +88,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		query := "SELECT id, title, description, url, image, uploaded_by, category, media FROM content WHERE category = ?"
+		query := "SELECT id, title, description, url, image, uploaded_by, category, media FROM content2 WHERE category = ?"
 		if keyword != "" {
 			query += " AND (title LIKE ? OR description LIKE ?)"
 		}
@@ -194,7 +194,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		CreateDate := time.Now()
 
 		// データベースに新しいユーザー情報を挿入
-		_, err = tx.Exec("INSERT INTO content (id, title, description, url, image, uploaded_by, create_date, category, media) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", IdStr, req.Title, req.Description, req.Url, req.Image, req.UploadedBy, CreateDate, req.Category, req.Media)
+		_, err = tx.Exec("INSERT INTO content2 (id, title, description, url, image, uploaded_by, create_date, category, media) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", IdStr, req.Title, req.Description, req.Url, req.Image, req.UploadedBy, CreateDate, req.Category, req.Media)
 		if err != nil {
 			log.Printf("fail: tx.Exec, %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
