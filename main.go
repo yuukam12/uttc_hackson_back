@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/joho/godotenv"
 	"github.com/oklog/ulid"
 	"log"
 	"net/http"
@@ -44,10 +43,10 @@ var db *sql.DB
 
 func init() {
 	// ①-1: 環境変数からMySQL接続情報を取得
-	envFilePath := "./.env_mysql"
-	if err := godotenv.Load(envFilePath); err != nil {
-		log.Fatalf("fail: godotenv.Load, %v\n", err)
-	}
+	//envFilePath := "./.env_mysql"
+	//if err := godotenv.Load(envFilePath); err != nil {
+	//	log.Fatalf("fail: godotenv.Load, %v\n", err)
+	//}
 	mysqlUser := os.Getenv("MYSQL_USER")
 	mysqlPwd := os.Getenv("MYSQL_PWD")
 	mysqlHost := os.Getenv("MYSQL_HOST")
