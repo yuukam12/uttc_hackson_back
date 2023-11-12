@@ -8,11 +8,11 @@
       <jdbc-url>jdbc:mysql://34.173.206.216:3306/hackson</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="hackathon@133.106.40.174" uuid="d2b35420-c6a7-488f-8203-2b0fc664f0c0">
+    <data-source source="LOCAL" name="hackathon@35.226.149.180" uuid="d2b35420-c6a7-488f-8203-2b0fc664f0c0">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://133.106.40.174:3306/hackathon</jdbc-url>
+      <jdbc-url>jdbc:mysql://35.226.149.180:3306/hackathon</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CMD_MYSQL="mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE}"
+CMD_MYSQL="mysql -u${MYSQL_USER} -p${MYSQL_PWD} ${MYSQL_DATABASE}"
 $CMD_MYSQL -e "create table hackathon (
     id int(10) AUTO_INCREMENT NOT NULL primary key,
     title varchar(50) NOT NULL,
