@@ -1,4 +1,4 @@
-module example.com/my/repo
+module main
 
 go 1.21.3
 
