@@ -12,10 +12,10 @@ COPY go.sum .
 RUN go mod download
 
 # Goプログラムをビルド
-RUN go build -o .
+RUN go build -o main
 
 # ポートを公開 (必要に応じて)
 EXPOSE 3306
 
 # コンテナが起動したときに実行するコマンドを指定
-CMD ["./main.go"]
+CMD ["main"]
