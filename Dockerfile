@@ -18,4 +18,4 @@ RUN go build -o main.go
 EXPOSE 3306
 
 # コンテナが起動したときに実行するコマンドを指定
-CMD ["./main"]
+CMD ["./main.go"]
