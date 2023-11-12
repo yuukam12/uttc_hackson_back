@@ -67,8 +67,8 @@ func init() {
 // ② /contentでリクエストされた時の処理
 func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "https://uttc-hackson-front-pyjlg4ck5-yuukmatsumotos-projects.vercel.app")
-	//w.Header().Set("Access-Control-Allow-Origin", "*")
+	//w.Header().Set("Access-Control-Allow-Origin", "https://uttc-hackson-front-pyjlg4ck5-yuukmatsumotos-projects.vercel.app")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-type")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
