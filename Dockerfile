@@ -1,4 +1,4 @@
-FROM golang:1.18 as build
+FROM golang:1.21.3 as build
 ENV LANG ja_JP.UTF-8
 
 # 作業ディレクトリを設定
