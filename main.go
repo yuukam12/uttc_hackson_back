@@ -44,7 +44,7 @@ var db *sql.DB
 
 func init() {
 	// ①-1: 環境変数からMySQL接続情報を取得
-	envFilePath := "/Users/matsumotoyuka/uttc_hackson/backend/.env_mysql"
+	envFilePath := "./.env_mysql"
 	if err := godotenv.Load(envFilePath); err != nil {
 		log.Fatalf("fail: godotenv.Load, %v\n", err)
 	}
