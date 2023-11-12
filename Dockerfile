@@ -12,7 +12,7 @@ COPY go.sum .
 RUN go mod download
 
 # Goプログラムをビルド
-RUN go build -o . main.go
+RUN go build -o .
 
 # ポートを公開 (必要に応じて)
 EXPOSE 3306
