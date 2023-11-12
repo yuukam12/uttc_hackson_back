@@ -9,8 +9,6 @@ COPY main.go .
 COPY go.mod .
 # COPY go.sum .
 
-# Goモジュールをダウンロード
-RUN go mod download
 # Goプログラムをビルド
 RUN go build -o main.go
 
