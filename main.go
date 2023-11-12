@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/joho/godotenv"
 	"github.com/oklog/ulid"
 	"log"
 	"net/http"
@@ -44,17 +43,17 @@ var db *sql.DB
 
 func init() {
 	// ①-1: 環境変数からMySQL接続情報を取得
-	envFilePath := "./.env_mysql"
-	if err := godotenv.Load(envFilePath); err != nil {
-		log.Fatalf("fail: godotenv.Load, %v\n", err)
-	}
+	//envFilePath := "./.env_mysql"
+	//if err := godotenv.Load(envFilePath); err != nil {
+	//	log.Fatalf("fail: godotenv.Load, %v\n", err)
+	//}
 	mysqlUser := os.Getenv("MYSQL_USER")
 	mysqlPwd := os.Getenv("MYSQL_PWD")
-	mysqlHost := os.Getenv("MYSQL_HOST")
+	//mysqlHost := os.Getenv("MYSQL_HOST")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
 
-	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
-	//connStr := fmt.Sprintf("%s:%s@(localhost:3306)/%s", mysqlUser, mysqlPwd, mysqlDatabase)
+	//connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
+	connStr := fmt.Sprintf("%s:%s@(localhost:3306)/%s", mysqlUser, mysqlPwd, mysqlDatabase)
 	// _db, nil := sql.Open("mysql", connStr)
 	_db, nil := sql.Open("mysql", connStr)
 
@@ -69,7 +68,7 @@ func init() {
 func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-type")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
 	switch r.Method {
 	case http.MethodOptions:
