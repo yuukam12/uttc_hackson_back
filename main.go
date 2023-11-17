@@ -285,7 +285,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Execute the DELETE operation in your database
-		err := deleteContentFromDatabase(req.Id)
+		_, err := db.Exec("DELETE FROM content2 WHERE id=?", req.Id)
 		if err != nil {
 			log.Printf("Failed to delete content with ID %s: %v", req.Id, err)
 			w.WriteHeader(http.StatusInternalServerError)
