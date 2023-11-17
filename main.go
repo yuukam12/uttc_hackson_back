@@ -284,6 +284,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		if req.Id == "" {
+			log.Println("Failed to get 'id' from request body")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
 		// Execute the DELETE operation in your database
 		_, err := db.Exec("DELETE FROM content2 WHERE id=?", req.Id)
 		if err != nil {
