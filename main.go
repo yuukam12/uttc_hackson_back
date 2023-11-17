@@ -38,6 +38,16 @@ type ContentReqForHTTPPost struct {
 	Media       string `json:"media"`
 }
 
+type ContentReqForHTTPPut struct {
+	Id          string `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description,omitempty"`
+}
+
+type ContentReqForHTTPDelete struct {
+	Id string `json:"id"`
+}
+
 // ① GoプログラムからMySQLへ接続
 var db *sql.DB
 
@@ -219,6 +229,69 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write(bytes)
 
+	case http.MethodPut:
+		var req ContentReqForHTTPPut
+		// リクエストボディから更新するコンテンツ情報を読み取る
+		decoder := json.NewDecoder(r.Body)
+		if err := decoder.Decode(&req); err != nil {
+			http.Error(w, "Failed to decode JSON", http.StatusBadRequest)
+			return
+		}
+		if req.Title == "" {
+			log.Println("fail: Title is empty")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		// トランザクションを開始
+		tx, err := db.Begin()
+		if err != nil {
+			log.Printf("fail: db.Begin, %v\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		defer func() {
+			// リクエスト処理の最後でトランザクションを確定またはロールバックする
+			if err != nil {
+				log.Printf("fail: Rolling back transaction, %v\n", err)
+				if err := tx.Rollback(); err != nil {
+					log.Printf("fail: Rollback error, %v\n", err)
+				}
+			} else {
+				if err := tx.Commit(); err != nil {
+					log.Printf("fail: Commit error, %v\n", err)
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+			}
+		}()
+
+		// 更新対象のコンテンツIDを取得
+		_, err = tx.Exec("UPDATE content2 SET title=?, description=? WHERE id=?", req.Title, req.Description, req.Id)
+		if err != nil {
+			log.Printf("fail: tx.Exec, %v\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+	case http.MethodDelete:
+		var req ContentReqForHTTPDelete
+		decoder := json.NewDecoder(r.Body)
+		if err := decoder.Decode(&req); err != nil {
+			log.Printf("Failed to decode DELETE request body: %v", err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		// Execute the DELETE operation in your database
+		err := deleteContentFromDatabase(req.Id)
+		if err != nil {
+			log.Printf("Failed to delete content with ID %s: %v", req.Id, err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
 		w.WriteHeader(http.StatusBadRequest)
@@ -250,4 +323,10 @@ func closeDBWithSysCall() {
 		log.Printf("success: db.Close()")
 		os.Exit(0)
 	}()
+}
+
+func deleteContentFromDatabase(id string) error {
+	// Replace the following logic with your actual database delete operation
+	_, err := db.Exec("DELETE FROM content2 WHERE id=?", id)
+	return err
 }
