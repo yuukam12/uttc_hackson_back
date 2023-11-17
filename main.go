@@ -283,7 +283,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-
+		id := r.URL.Query().Get("id")
 		if req.Id == "" {
 			log.Println("Failed to get 'id' from request body")
 			w.WriteHeader(http.StatusBadRequest)
@@ -291,9 +291,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Execute the DELETE operation in your database
-		_, err := db.Exec("DELETE FROM content2 WHERE id=?", req.Id)
+		_, err := db.Exec("DELETE FROM content2 WHERE id=?", id)
 		if err != nil {
-			log.Printf("Failed to delete content with ID %s: %v", req.Id, err)
+			log.Printf("Failed to delete content with ID %s: %v", id, err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
