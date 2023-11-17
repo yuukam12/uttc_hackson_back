@@ -274,6 +274,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+		w.WriteHeader(http.StatusOK)
 
 	case http.MethodDelete:
 		var req ContentReqForHTTPDelete
@@ -297,6 +298,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+		w.WriteHeader(http.StatusOK)
 
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
