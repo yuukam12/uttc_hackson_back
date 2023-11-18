@@ -98,7 +98,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		query := "SELECT id, title, description, url, image, uploaded_by, category, media FROM content2 WHERE category = ?"
+		query := "SELECT id, title, description, url, image, uploaded_by, category, media FROM content WHERE category = ?"
 		if keyword != "" {
 			query += " AND (title LIKE ? OR description LIKE ?)"
 		}
