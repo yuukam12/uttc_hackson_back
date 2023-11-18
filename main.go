@@ -320,7 +320,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}()
 
 		// Execute the DELETE operation in your database
-		_, err = tx.Exec("DELETE FROM content2 WHERE id=?", id)
+		_, err = tx.Exec("DELETE FROM content2 WHERE id=?", req.Id)
 		if err := tx.Commit(); err != nil {
 			log.Printf("fail: tx.Commit, %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
