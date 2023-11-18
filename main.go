@@ -98,7 +98,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		query := "SELECT id, title, description, url, image, uploaded_by, category, media FROM content WHERE category = ?"
+		query := "SELECT id, title, description, url, image, uploaded_by, category, media FROM content2 WHERE category = ?"
 		if keyword != "" {
 			query += " AND (title LIKE ? OR description LIKE ?)"
 		}
@@ -269,6 +269,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		// 更新対象のコンテンツIDを取得
 		_, err = tx.Exec("UPDATE content2 SET title=?, description=? WHERE id=?", req.Title, req.Description, req.Id)
+		if err := tx.Commit(); err != nil {
+			log.Printf("fail: tx.Commit, %v\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		if err != nil {
 			log.Printf("fail: tx.Exec, %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -291,8 +296,36 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		tx, err := db.Begin()
+		if err != nil {
+			log.Printf("fail: db.Begin, %v\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		defer func() {
+			// リクエスト処理の最後でトランザクションを確定またはロールバックする
+			if err != nil {
+				log.Printf("fail: Rolling back transaction, %v\n", err)
+				if err := tx.Rollback(); err != nil {
+					log.Printf("fail: Rollback error, %v\n", err)
+				}
+			} else {
+				if err := tx.Commit(); err != nil {
+					log.Printf("fail: Commit error, %v\n", err)
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+			}
+		}()
+
 		// Execute the DELETE operation in your database
-		_, err := db.Exec("DELETE FROM content2 WHERE id=?", id)
+		_, err = tx.Exec("DELETE FROM content2 WHERE id=?", id)
+		if err := tx.Commit(); err != nil {
+			log.Printf("fail: tx.Commit, %v\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		if err != nil {
 			log.Printf("Failed to delete content with ID %s: %v", id, err)
 			w.WriteHeader(http.StatusInternalServerError)
